@@ -21,7 +21,8 @@ namespace rustavi2WebApi.DI
             collection.AddTransient<IHtmlParser<IEnumerable<NewsItem>>, NewsArchiveParser>();
             collection.AddTransient<IHtmlParser<NewsItemDetail>, NewsDetailParser>();
             collection.AddTransient<IHtmlParser<IEnumerable<ShowItem>>, ShowsParser>();
-
+            collection.AddTransient<IHtmlParser<ShowItemDetail>, ShowDetailParser>();
+            collection.AddTransient<IHtmlParser<IEnumerable<ShowVideoItem>>, ShowVideosParser>();
             return collection;
         }
     }

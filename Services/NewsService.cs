@@ -6,7 +6,7 @@ using rustavi2WebApi.Models.Services;
 
 namespace rustavi2WebApi.Services
 {
-    public class NewsService : INewsService
+    internal class NewsService : INewsService
     {
         private readonly IHtmlParser<IEnumerable<NewsItem>> _newsParser;
         private readonly IHtmlParser<NewsItemDetail> _newsDetailParser;

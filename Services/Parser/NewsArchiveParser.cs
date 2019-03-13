@@ -41,7 +41,6 @@ namespace rustavi2WebApi.Services.Parser
                         </div>
                          */
 
-
                          var time = childNode.SelectSingleNode(@".//span[@class='dt']")?.InnerHtml ?? string.Empty;
                          var linkElem = childNode.SelectSingleNode(@".//a[@class='link']");
                          var newsUrl = linkElem?.Attributes.SingleOrDefault(a => a.Name == "href")?.Value ?? string.Empty;

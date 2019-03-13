@@ -33,14 +33,9 @@ namespace rustavi2WebApi.Services.Parser
                 {
                     result.Time = newsDate;
                 }
-
+                
                 var phNode = newsNode.SelectSingleNode(@".//div[@class='ph']");
-                var style = phNode?.Attributes?.SingleOrDefault(x => x.Name == "style")?.Value ?? string.Empty;
-                if(style.StartsWith("background-image:url("))
-                {
-                    result.CoverImageUrl = _newsCoverImagePath.Replace("$0", style.Substring("background-image:url(".Length).TrimEnd(')'));
-                }
-
+                result.CoverImageUrl = _newsCoverImagePath.Replace("$0", phNode.BackgroundImageUrl());
                 result.StoryDetail = newsNode.SelectSingleNode(@".//span[@itemprop='articleBody']")?.InnerHtml ?? string.Empty;
             }
 

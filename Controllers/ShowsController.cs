@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using rustavi2WebApi.Models.Services;
-using rustavi2WebApi.Services;
 
 namespace rustavi2WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    using rustavi2WebApi.Models.Services;
+    using rustavi2WebApi.Services;
+
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ShowsController : ControllerBase
     {
@@ -20,17 +21,26 @@ namespace rustavi2WebApi.Controllers
         }
 
         // GET api/shows
+        /// <summary>
+        /// Retrieves all shows information.
+        /// </summary>
         [HttpGet()]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ShowItem>))]
+        [ProducesAttribute("application/json")]
         public async Task<IActionResult> GetAsync()
         {
             var shows = await _showsService.GetShows();
             return CreatedAtAction(nameof(GetAsync), shows);
         }
 
-        // GET api/shows/kirieri
+        // GET api/shows/{showName}
+        /// <summary>
+        /// Retrieves show detail by show name.
+        /// </summary>
+        /// <param name="name">Show name</param>
         [HttpGet("{name}")]
         [ProducesResponseType(200, Type = typeof(ShowItemDetail))]
+        [ProducesAttribute("application/json")]
         public async Task<IActionResult> GetDetail(string name)
         {
             var showDetail = await _showsService.GetShowDetail(name);
