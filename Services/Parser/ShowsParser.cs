@@ -47,6 +47,7 @@ namespace rustavi2WebApi.Services.Parser
 
                         result.Add(new ShowItem
                         {
+                            Id = WebClientService.ExtractIdFromUrl(showUrl),
                             Name = showName,
                             Desc = desc,
                             PageUrl = _showPageUrl.Replace("$0", showUrl),

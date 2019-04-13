@@ -26,16 +26,16 @@ namespace rustavi2WebApi.Services
             });
         }
 
-        public async Task<ShowItemDetail> GetShowDetail(string name)
+        public async Task<ShowItemDetail> GetShowDetail(string id)
         {
-            var result = await WebClientService.HttpGet($"{_urlShows}/{name}", async (string html) => 
+            var result = await WebClientService.HttpGet($"{_urlShows}/{id}", async (string html) => 
             {
                 return await _showDetailParser.Parse(html);
             });
 
             if(result != null)
             {
-                result.Name = name;
+                result.Id = id;
             }
 
             return result;

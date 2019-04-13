@@ -20,7 +20,7 @@ namespace rustavi2WebApi.Controllers
             _showsService = showsService;
         }
 
-        // GET api/shows
+        // GET api/v1/shows
         /// <summary>
         /// Retrieves all shows information.
         /// </summary>
@@ -33,18 +33,18 @@ namespace rustavi2WebApi.Controllers
             return CreatedAtAction(nameof(GetAsync), shows);
         }
 
-        // GET api/shows/{showName}
+        // GET api/v1/shows/{showId}
         /// <summary>
-        /// Retrieves show detail by show name.
+        /// Retrieves show detail by show id.
         /// </summary>
-        /// <param name="name">Show name</param>
-        [HttpGet("{name}")]
+        /// <param name="id">Show identifier</param>
+        [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(ShowItemDetail))]
         [ProducesAttribute("application/json")]
-        public async Task<IActionResult> GetDetail(string name)
+        public async Task<IActionResult> GetDetail(string id)
         {
-            var showDetail = await _showsService.GetShowDetail(name);
-            return CreatedAtAction(nameof(GetDetail), new { name = name }, showDetail);
+            var showDetail = await _showsService.GetShowDetail(id);
+            return CreatedAtAction(nameof(GetDetail), new { name = id }, showDetail);
         }
     }
 }

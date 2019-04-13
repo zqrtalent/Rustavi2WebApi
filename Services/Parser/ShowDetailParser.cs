@@ -60,6 +60,7 @@ namespace rustavi2WebApi.Services.Parser
             var dicVideoSectionUrlByName = ParseVideoSections(doc.DocumentNode);
             if(dicVideoSectionUrlByName?.Any() ?? false)
             {
+                var sectionVideoItems = new List<SectionVideoItems>();
                 // Load videos by sections.
                 foreach(var pair in dicVideoSectionUrlByName)
                 {
@@ -70,10 +71,14 @@ namespace rustavi2WebApi.Services.Parser
 
                     if(videoItems?.Any() ?? false)
                     {
-                        if(result.VideoItemsBySection == null)
-                            result.VideoItemsBySection = new Dictionary<string, IEnumerable<ShowVideoItem>>();
-                        result.VideoItemsBySection[pair.Key] = videoItems;
+                        sectionVideoItems.Add(new SectionVideoItems
+                        {
+                            Section = pair.Key,
+                            VideoItems = videoItems
+                        });
                     }
+                    
+                    result.SectionVideoItems = sectionVideoItems;
                 }
             }
 
