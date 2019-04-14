@@ -3,6 +3,9 @@ mono: none
 dist: xenial
 dotnet: 2.2.203
 
+services:
+  - docker
+
 install:
   - dotnet restore ./Rustavi2WebApi/rustavi2WebApi.csproj
 
