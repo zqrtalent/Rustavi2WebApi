@@ -6,12 +6,13 @@ USER_NAME=$1 #Heroku username
 HEROKU_APP=$2 #Heroku app name
 HEROKU_APP_PROCESS_TYPE="web"
 HEROKU_API_KEY=$3 #Heroku api key
+BUILD_DIR=$4
 
 #Login in docker registry.
 docker login --username=$USER_NAME --password=$HEROKU_API_KEY $DOCKER_REGISTRY_URL
 
 #Build docker image.
-docker build -t ${HEROKU_APP}_image ../Rustavi2WebApi/
+docker build -t ${HEROKU_APP}_image ${BUILD_DIR}/Rustavi2WebApi/
 
 #Tag and push into container registry.
 docker tag ${HEROKU_APP}_image ${DOCKER_REGISTRY_URL}/${HEROKU_APP}/${HEROKU_APP_PROCESS_TYPE} 

@@ -14,6 +14,6 @@ script:
 
 deploy:
   provider: script
-  script: bash ./scripts/deploy-heroku-docker.sh $HEROKU_USER_NAME $HEROKU_APP $HEROKU_API_KEY
+  script: bash ./scripts/deploy-heroku-docker.sh $HEROKU_USER_NAME $HEROKU_APP $HEROKU_API_KEY $TRAVIS_BUILD_DIR
   on:
     branch: release
