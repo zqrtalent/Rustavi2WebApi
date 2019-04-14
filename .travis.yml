@@ -8,3 +8,9 @@ install:
 
 script:
   - dotnet build ./Rustavi2WebApi/rustavi2WebApi.csproj
+
+deploy:
+  provider: script
+  script: bash ./scripts/deploy-heroku-docker.sh $HEROKU_USER_NAME $HEROKU_APP $HEROKU_API_KEY
+  on:
+    branch: release
