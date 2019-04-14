@@ -330,8 +330,8 @@ ASALocalRun/
 .mfractor/
 
 
-# viscose
-.vscode/
+# viscode
+**/.vscode/
 
 # Ds_Store
 .DS_Store

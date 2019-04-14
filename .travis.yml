@@ -4,7 +4,7 @@ dist: xenial
 dotnet: 2.2.203
 
 install:
-  - dotnet restore
+  - dotnet restore ./Rustavi2WebApi/rustavi2WebApi.csproj
 
 script:
-  - dotnet build
+  - dotnet build ./Rustavi2WebApi/rustavi2WebApi.csproj
