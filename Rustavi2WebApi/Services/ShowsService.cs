@@ -39,36 +39,6 @@ namespace rustavi2WebApi.Services
             }
 
             return result;
-
-            //await Task.CompletedTask;
-
-            // return new ShowItemDetail
-            // {
-            //      Name = "კურიერი",
-            //      Desc = "ყოველდღე 21:00",
-            //      PageUrl = "http://rustavi2.ge/ka/shows/kurieri",
-            //      MainVideo = new ShowVideoItem
-            //      {
-            //          Id = "",
-            //         Title = "კურიერი - 21:00 18 თებერვალი, 2019, ნაწილი 2",
-            //         VideoPageUrl = "",
-            //         CoverImageUrl = "",
-            //      },
-            //      VideoItemsBySection = new Dictionary<string, IEnumerable<ShowVideoItem>>
-            //      {
-            //          { string.Empty,  new ShowVideoItem[] 
-            //          {
-            //             new ShowVideoItem
-            //             {
-            //                 Id = "",
-            //                 Title = "კურიერი - 21:00 18 თებერვალი, 2019, ნაწილი 2",
-            //                 VideoPageUrl = "",
-            //                 CoverImageUrl = "",
-            //             }
-            //          } 
-            //          }
-            //      }
-            // };
         }
     }
 }
