@@ -15,6 +15,7 @@ namespace rustavi2WebApi
 {
     using System.IO;
     using System.Reflection;
+    using Microsoft.AspNetCore.Http;
     using rustavi2WebApi.DI;
     using Swashbuckle.AspNetCore.Swagger;
 
@@ -30,6 +31,8 @@ namespace rustavi2WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCaching();
+            
             services
                 .RegisterWebAppServices()
                 .AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -70,6 +73,21 @@ namespace rustavi2WebApi
             // Shows UseCors with CorsPolicyBuilder.
             //app.UseCors(builder => builder.WithOrigins("http://localhost:8100", "ionic://localhost"));
             app.UseCors(builder => builder.AllowAnyOrigin());
+
+            app.UseResponseCaching();
+
+            app.Use(async (context, next) => {
+                context.Response.GetTypedHeaders().CacheControl = 
+                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                    {
+                        Public = true,
+                        MaxAge = TimeSpan.FromSeconds(10)
+                    };
+                context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] = 
+                    new string[] { "Accept-Encoding" };
+
+                await next();
+            });
 
             //app.UseHttpsRedirection();
             app.UseMvc();
