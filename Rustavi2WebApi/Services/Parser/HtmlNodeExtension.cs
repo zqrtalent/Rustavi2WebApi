@@ -22,5 +22,10 @@ namespace rustavi2WebApi.Services.Parser
         {
             return node?.Attributes?.SingleOrDefault(x => x.Name == "href")?.Value ?? string.Empty; 
         }
+
+        public static string SrcAttribute(this HtmlNode node)
+        {
+            return node?.Attributes?.SingleOrDefault(x => x.Name == "src")?.Value ?? string.Empty; 
+        }
     }
 }

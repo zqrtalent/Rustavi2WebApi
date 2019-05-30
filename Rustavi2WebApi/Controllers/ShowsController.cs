@@ -30,7 +30,7 @@ namespace rustavi2WebApi.Controllers
         public async Task<IActionResult> GetAsync()
         {
             var shows = await _showsService.GetShows();
-            return CreatedAtAction(nameof(GetAsync), shows);
+            return Ok(shows);
         }
 
         // GET api/v1/shows/{showId}
@@ -44,7 +44,22 @@ namespace rustavi2WebApi.Controllers
         public async Task<IActionResult> GetDetail(string id)
         {
             var showDetail = await _showsService.GetShowDetail(id);
-            return CreatedAtAction(nameof(GetDetail), new { name = id }, showDetail);
+            return Ok(showDetail);
+        }
+
+        // GET api/shows/{id}/video/{videoId}
+        /// <summary>
+        /// Retrieves video detail of the show by id.
+        /// </summary>
+        /// <param name="id">Show identifier</param>
+        /// <param name="videoId">Video identifier</param>
+        [HttpGet("{id}/video/{videoId}")]
+        [ProducesResponseType(200, Type = typeof(ItemVideoDetails))]
+        [ProducesAttribute("application/json")]
+        public async Task<IActionResult> GetShowVideoDetail(string id, string videoId)
+        {
+            var showVideoDetail = await _showsService.GetShowVideoDetail(id, videoId);
+            return Ok(showVideoDetail);
         }
     }
 }

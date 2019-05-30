@@ -30,7 +30,7 @@ namespace rustavi2WebApi.Controllers
         public async Task<IActionResult> GetLatestAsync()
         {
             var news = await _newsService.GetLatestNews();
-            return CreatedAtAction(nameof(GetLatestAsync), news);
+            return Ok(news);
         }
 
         // GET api/news/{id}
@@ -44,7 +44,21 @@ namespace rustavi2WebApi.Controllers
         public async Task<IActionResult> GetDetail(string id)
         {
             var newsDetail = await _newsService.GetNewsDetail(id);
-            return CreatedAtAction(nameof(GetDetail), new { id = id }, newsDetail);
+            return Ok(newsDetail);
+        }
+
+        // GET api/news/{id}/video
+        /// <summary>
+        /// Retrieves video detail by news id.
+        /// </summary>
+        /// <param name="id">News identifier</param>     
+        [HttpGet("{id}/video")]
+        [ProducesResponseType(200, Type = typeof(ItemVideoDetails))]
+        [ProducesAttribute("application/json")]
+        public async Task<IActionResult> GetVideoDetail(string id)
+        {
+            var newsVideoDetail = await _newsService.GetNewsVideoDetail(id);
+            return Ok(newsVideoDetail);
         }
     }
 }

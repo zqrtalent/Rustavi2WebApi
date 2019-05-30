@@ -10,5 +10,6 @@ namespace rustavi2WebApi.Services
     {
         Task<IEnumerable<NewsItem>> GetLatestNews();
         Task<NewsItemDetail> GetNewsDetail(string id);
+        Task<ItemVideoDetails> GetNewsVideoDetail(string id);
     }
 }

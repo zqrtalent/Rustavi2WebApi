@@ -10,5 +10,6 @@ namespace rustavi2WebApi.Services
     {
         Task<IEnumerable<ShowItem>> GetShows();
         Task<ShowItemDetail> GetShowDetail(string name);
+        Task<ItemVideoDetails> GetShowVideoDetail(string name, string videoId);
     }
 }
