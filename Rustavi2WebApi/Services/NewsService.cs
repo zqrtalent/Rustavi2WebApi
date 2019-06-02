@@ -6,6 +6,10 @@ using rustavi2WebApi.Models.Services;
 
 namespace rustavi2WebApi.Services
 {
+    using Microsoft.Extensions.Options;
+    using rustavi2WebApi.Extensions;
+    using rustavi2WebApi.Settings;
+
     internal class NewsService : INewsService
     {
         private readonly IHtmlParser<IEnumerable<NewsItem>> _newsParser;
@@ -16,21 +20,30 @@ namespace rustavi2WebApi.Services
         private readonly string _urlNewsArchive = "http://rustavi2.ge/ka/news/page-";
         private readonly string _urlNewsDetail = "http://rustavi2.ge/ka/news/";
 
+        private readonly IOptionsMonitor<UrlReplaceSettings> _urlReplaceSettings;
+
         public NewsService(IHtmlParser<IEnumerable<NewsItem>> newsParser, IHtmlParser<NewsItemDetail> newsDetailParser,
-                            IHtmlParser<string> iframeSrcParser, IHtmlParser<ItemVideoDetails> itemVideoParser)
+                            IHtmlParser<string> iframeSrcParser, IHtmlParser<ItemVideoDetails> itemVideoParser, 
+                            IOptionsMonitor<UrlReplaceSettings> urlReplaceSettings)
         {
             _newsParser = newsParser;
             _newsDetailParser = newsDetailParser;
             _iframeSrcParser = iframeSrcParser;
             _itemVideoParser = itemVideoParser;
+            _urlReplaceSettings = urlReplaceSettings;
         }
 
         public async Task<IEnumerable<NewsItem>> GetLatestNews()
         {
-            return await WebClientService.HttpGet(_urlNewsArchive + "1", async (string html) => 
+            var newsItems = await WebClientService.HttpGet(_urlNewsArchive + "1", async (string html) => 
             {
                 return await _newsParser.Parse(html);
             });
+
+            return newsItems?.Select(x => {
+               x.CoverImageUrl = _urlReplaceSettings.CurrentValue.ImageUrlHostReplace.ReplaceAllTheOccurences(x.CoverImageUrl);
+               return x; 
+            })?.ToList();
         }
 
         public async Task<NewsItemDetail> GetNewsDetail(string id)
@@ -43,6 +56,8 @@ namespace rustavi2WebApi.Services
             if(newsDetail != null)
             {
                 newsDetail.Id = id;
+                newsDetail.CoverImageUrl = _urlReplaceSettings.CurrentValue.ImageUrlHostReplace.ReplaceAllTheOccurences(newsDetail.CoverImageUrl);
+                newsDetail.VideoUrl = _urlReplaceSettings.CurrentValue.HlsUrlHostReplace.ReplaceAllTheOccurences(newsDetail.VideoUrl);
             }
             return newsDetail;
         }
@@ -68,6 +83,7 @@ namespace rustavi2WebApi.Services
             {
                 videoDetails.Id = id;
                 videoDetails.VideoType = ItemVideoType.NewsVideo;
+                videoDetails.VideoUrl = _urlReplaceSettings.CurrentValue.HlsUrlHostReplace.ReplaceAllTheOccurences(videoDetails.VideoUrl);
             }
 
             return videoDetails;

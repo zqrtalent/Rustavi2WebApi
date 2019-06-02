@@ -17,6 +17,7 @@ namespace rustavi2WebApi
     using System.Reflection;
     using Microsoft.AspNetCore.Http;
     using rustavi2WebApi.DI;
+    using rustavi2WebApi.Settings;
     using Swashbuckle.AspNetCore.Swagger;
 
     public class Startup
@@ -45,6 +46,8 @@ namespace rustavi2WebApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+            
+            services.Configure<UrlReplaceSettings>(Configuration.GetSection("UrlReplaceSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

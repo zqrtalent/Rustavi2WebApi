@@ -11,7 +11,7 @@ namespace rustavi2WebApi.Services.Parser
 
     internal class NewsDetailParser : IHtmlParser<NewsItemDetail>
     {
-        public const string _newsCoverImagePath = @"http://rustavi2.ge$0";
+        public const string _newsCoverImagePath = @"http://rustavi2.ge{0}"; // NewsDetailCoverImageUrl
 
         public async Task<NewsItemDetail> Parse(string htmlContent)
         {
@@ -35,7 +35,7 @@ namespace rustavi2WebApi.Services.Parser
                 }
                 
                 var phNode = newsNode.SelectSingleNode(@".//div[@class='ph']");
-                result.CoverImageUrl = _newsCoverImagePath.Replace("$0", phNode.BackgroundImageUrl());
+                result.CoverImageUrl = string.Format(_newsCoverImagePath, phNode.BackgroundImageUrl());
                 result.StoryDetail = newsNode.SelectSingleNode(@".//span[@itemprop='articleBody']")?.InnerHtml ?? string.Empty;
             }
 

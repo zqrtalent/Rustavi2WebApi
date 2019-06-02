@@ -12,9 +12,8 @@ namespace rustavi2WebApi.Services.Parser
 
     internal class ShowDetailParser : IHtmlParser<ShowItemDetail>
     {
-        public const string _showPageUrl = @"http://rustavi2.ge/ka/shows$0";
-        public const string _newsCoverImagePath = @"http://rustavi2.ge$0";
-        public const string _showsSubAjaxUrl = "http://rustavi2.ge/includes/shows_sub_ajax.php";
+        public const string _newsCoverImagePath = @"http://rustavi2.ge{0}"; //WebSiteUrl
+        public const string _showsSubAjaxUrl = "http://rustavi2.ge/includes/shows_sub_ajax.php"; // ShowSubAjaxUrl
 
         // load_videos('ka','3','');
         // load_videos('ka','3',5);
@@ -46,10 +45,10 @@ namespace rustavi2WebApi.Services.Parser
                     var mainVideoLink = mainVideoCoverUrlNode.SelectSingleNode(@"//a[@class='link']");
 
                     var mainVideo = new ShowVideoItem();
-                    mainVideo.VideoPageUrl =  _newsCoverImagePath.Replace("$0", mainVideoLink.HrefAttribute());
+                    mainVideo.VideoPageUrl =  string.Format(_newsCoverImagePath, mainVideoLink.HrefAttribute());
                     mainVideo.Id = WebClientService.ExtractIdFromUrl(mainVideo.VideoPageUrl);
                     mainVideo.Title = mainVideoPLNode.SelectSingleNode(@"//div[@class='txt rioni']")?.InnerHtml ?? string.Empty;
-                    mainVideo.CoverImageUrl = _newsCoverImagePath.Replace("$0", mainVideoCoverUrlNode.BackgroundImageUrl());
+                    mainVideo.CoverImageUrl = string.Format(_newsCoverImagePath, mainVideoCoverUrlNode.BackgroundImageUrl());
                     result.MainVideo = mainVideo;
                 }
 

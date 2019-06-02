@@ -11,8 +11,8 @@ namespace rustavi2WebApi.Services.Parser
 
     internal class ShowsParser : IHtmlParser<IEnumerable<ShowItem>>
     {
-        public const string _coverImagePath = @"http://rustavi2.ge/$0";
-        public const string _showPageUrl = @"http://rustavi2.ge$0";
+        public const string _coverImagePath = @"http://rustavi2.ge/$0"; // ShowCoverImageUrl
+        public const string _showPageUrl = @"http://rustavi2.ge$0"; //ShowPageUrl
 
         public async Task<IEnumerable<ShowItem>> Parse(string htmlContent)
         {
