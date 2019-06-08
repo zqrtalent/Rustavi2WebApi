@@ -7,8 +7,10 @@ using rustavi2WebApi.Models.Services;
 namespace rustavi2WebApi.Services.Parser
 {
     using System.Globalization;
+    using System.Net.Http;
     using System.Text.RegularExpressions;
     using HtmlAgilityPack;
+    using rustavi2WebApi.Services.Extensions;
 
     internal class ShowDetailParser : IHtmlParser<ShowItemDetail>
     {
@@ -20,9 +22,11 @@ namespace rustavi2WebApi.Services.Parser
         public const string _regexLoadVideosParams = @"load_videos\(\s*\'([a-zA-Z0-9_ ]*)\s*\'\,\s*\'([a-zA-Z0-9_ ]*)\s*\'\s*\,\s*\'?([a-zA-Z0-9_ ]*)\s*\'?\s*\)";
 
         private readonly IHtmlParser<IEnumerable<ShowVideoItem>> _showVideosParser;
-
-        public ShowDetailParser(IHtmlParser<IEnumerable<ShowVideoItem>> showVideosParser)
+        private readonly HttpClient _httpClient;
+        
+        public ShowDetailParser(HttpClient httpClient, IHtmlParser<IEnumerable<ShowVideoItem>> showVideosParser)
         {
+            _httpClient = httpClient;
             _showVideosParser = showVideosParser;
         }
 
@@ -46,7 +50,7 @@ namespace rustavi2WebApi.Services.Parser
 
                     var mainVideo = new ShowVideoItem();
                     mainVideo.VideoPageUrl =  string.Format(_newsCoverImagePath, mainVideoLink.HrefAttribute());
-                    mainVideo.Id = WebClientService.ExtractIdFromUrl(mainVideo.VideoPageUrl);
+                    mainVideo.Id = UrlExtensions.ExtractIdFromUrl(mainVideo.VideoPageUrl);
                     mainVideo.Title = mainVideoPLNode.SelectSingleNode(@"//div[@class='txt rioni']")?.InnerHtml ?? string.Empty;
                     mainVideo.CoverImageUrl = string.Format(_newsCoverImagePath, mainVideoCoverUrlNode.BackgroundImageUrl());
                     result.MainVideo = mainVideo;
@@ -63,7 +67,7 @@ namespace rustavi2WebApi.Services.Parser
                 // Load videos by sections.
                 foreach(var pair in dicVideoSectionUrlByName)
                 {
-                    var videoItems = await WebClientService.HttpGet(pair.Value, async (string html) => 
+                    var videoItems = await _httpClient.HttpGet(pair.Value, async (string html) => 
                     {
                         return await _showVideosParser.Parse(html);
                     });

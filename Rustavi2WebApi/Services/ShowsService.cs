@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using rustavi2WebApi.Extensions;
 using rustavi2WebApi.Models.Services;
+using rustavi2WebApi.Services.Extensions;
 using rustavi2WebApi.Settings;
 
 namespace rustavi2WebApi.Services
@@ -18,14 +20,17 @@ namespace rustavi2WebApi.Services
         private readonly IHtmlParser<string> _iframeSrcParser;
         private readonly IHtmlParser<ItemVideoDetails> _itemVideoParser;
         private readonly IOptionsMonitor<UrlReplaceSettings> _urlReplaceSettings;
-
+        private readonly HttpClient _httpClient;
+        
         public ShowsService(
+            HttpClient httpClient,
             IHtmlParser<IEnumerable<ShowItem>> showsParser, 
             IHtmlParser<ShowItemDetail> showDetailParser,
             IHtmlParser<string> iframeSrcParser, 
             IHtmlParser<ItemVideoDetails> itemVideoParser,
             IOptionsMonitor<UrlReplaceSettings> urlReplaceSettings)
         {
+            _httpClient = httpClient;
             _showsParser = showsParser;
             _showDetailParser = showDetailParser;
             _iframeSrcParser = iframeSrcParser;
@@ -35,7 +40,7 @@ namespace rustavi2WebApi.Services
 
         public async Task<IEnumerable<ShowItem>> GetShows()
         {
-            var listShows = await WebClientService.HttpGet(_urlShows, async (string html) => 
+            var listShows = await _httpClient.HttpGet(_urlShows, async (string html) => 
             {
                 return await _showsParser.Parse(html);
             });
@@ -51,7 +56,7 @@ namespace rustavi2WebApi.Services
 
         public async Task<ShowItemDetail> GetShowDetail(string id)
         {
-            var result = await WebClientService.HttpGet($"{_urlShows}/{id}", async (string html) => 
+            var result = await _httpClient.HttpGet($"{_urlShows}/{id}", async (string html) => 
             {
                 return await _showDetailParser.Parse(html);
             });
@@ -87,7 +92,7 @@ namespace rustavi2WebApi.Services
 
         public async Task<ItemVideoDetails> GetShowVideoDetail(string name, string videoId)
         {
-            var iframeSrcUrl = await WebClientService.HttpGet(string.Format(_urlVideoPage, videoId), async (string html) => 
+            var iframeSrcUrl = await _httpClient.HttpGet(string.Format(_urlVideoPage, videoId), async (string html) => 
             {
                 return await _iframeSrcParser.Parse(html);
             });
@@ -97,7 +102,7 @@ namespace rustavi2WebApi.Services
                 return null;
             }
 
-            var videoDetails = await WebClientService.HttpGet(iframeSrcUrl, async (string html) => 
+            var videoDetails = await _httpClient.HttpGet(iframeSrcUrl, async (string html) => 
             {
                 return await _itemVideoParser.Parse(html);
             });

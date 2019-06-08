@@ -8,6 +8,7 @@ namespace rustavi2WebApi.Services.Parser
 {
     using System.Globalization;
     using HtmlAgilityPack;
+    using rustavi2WebApi.Services.Extensions;
 
     internal class ShowsParser : IHtmlParser<IEnumerable<ShowItem>>
     {
@@ -47,7 +48,7 @@ namespace rustavi2WebApi.Services.Parser
 
                         result.Add(new ShowItem
                         {
-                            Id = WebClientService.ExtractIdFromUrl(showUrl),
+                            Id = UrlExtensions.ExtractIdFromUrl(showUrl),
                             Name = showName,
                             Desc = desc,
                             PageUrl = _showPageUrl.Replace("$0", showUrl),

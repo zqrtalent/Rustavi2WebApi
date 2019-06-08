@@ -6,8 +6,10 @@ using rustavi2WebApi.Models.Services;
 
 namespace rustavi2WebApi.Services
 {
+    using System.Net.Http;
     using Microsoft.Extensions.Options;
     using rustavi2WebApi.Extensions;
+    using rustavi2WebApi.Services.Extensions;
     using rustavi2WebApi.Settings;
 
     internal class NewsService : INewsService
@@ -21,11 +23,15 @@ namespace rustavi2WebApi.Services
         private readonly string _urlNewsDetail = "http://rustavi2.ge/ka/news/";
 
         private readonly IOptionsMonitor<UrlReplaceSettings> _urlReplaceSettings;
-
-        public NewsService(IHtmlParser<IEnumerable<NewsItem>> newsParser, IHtmlParser<NewsItemDetail> newsDetailParser,
-                            IHtmlParser<string> iframeSrcParser, IHtmlParser<ItemVideoDetails> itemVideoParser, 
+        private readonly HttpClient _httpClient;
+        public NewsService( HttpClient httpClient, 
+                            IHtmlParser<IEnumerable<NewsItem>> newsParser, 
+                            IHtmlParser<NewsItemDetail> newsDetailParser,
+                            IHtmlParser<string> iframeSrcParser, 
+                            IHtmlParser<ItemVideoDetails> itemVideoParser, 
                             IOptionsMonitor<UrlReplaceSettings> urlReplaceSettings)
         {
+            _httpClient = httpClient;
             _newsParser = newsParser;
             _newsDetailParser = newsDetailParser;
             _iframeSrcParser = iframeSrcParser;
@@ -35,7 +41,7 @@ namespace rustavi2WebApi.Services
 
         public async Task<IEnumerable<NewsItem>> GetLatestNews()
         {
-            var newsItems = await WebClientService.HttpGet(_urlNewsArchive + "1", async (string html) => 
+            var newsItems = await _httpClient.HttpGet(_urlNewsArchive + "1", async (string html) => 
             {
                 return await _newsParser.Parse(html);
             });
@@ -48,7 +54,7 @@ namespace rustavi2WebApi.Services
 
         public async Task<NewsItemDetail> GetNewsDetail(string id)
         {
-            var newsDetail = await WebClientService.HttpGet(_urlNewsDetail + id, async (string html) => 
+            var newsDetail = await _httpClient.HttpGet(_urlNewsDetail + id, async (string html) => 
             {
                 return await _newsDetailParser.Parse(html);
             });
@@ -64,7 +70,7 @@ namespace rustavi2WebApi.Services
 
         public async Task<ItemVideoDetails> GetNewsVideoDetail(string id)
         {
-            var iframeSrcUrl = await WebClientService.HttpGet(_urlNewsDetail + id, async (string html) => 
+            var iframeSrcUrl = await _httpClient.HttpGet(_urlNewsDetail + id, async (string html) => 
             {
                 return await _iframeSrcParser.Parse(html);
             });
@@ -74,7 +80,7 @@ namespace rustavi2WebApi.Services
                 return null;
             }
 
-            var videoDetails = await WebClientService.HttpGet(iframeSrcUrl, async (string html) => 
+            var videoDetails = await _httpClient.HttpGet(iframeSrcUrl, async (string html) => 
             {
                 return await _itemVideoParser.Parse(html);
             });

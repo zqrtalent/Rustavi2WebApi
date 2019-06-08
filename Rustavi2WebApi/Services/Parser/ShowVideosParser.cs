@@ -7,6 +7,7 @@ using rustavi2WebApi.Models.Services;
 namespace rustavi2WebApi.Services.Parser
 {
     using HtmlAgilityPack;
+    using rustavi2WebApi.Services.Extensions;
 
     internal class ShowVideosParser : IHtmlParser<IEnumerable<ShowVideoItem>>
     {
@@ -33,7 +34,7 @@ namespace rustavi2WebApi.Services.Parser
                     var coverImageUrl = itemNode.SelectSingleNode(".//div[@class='ph']")?.BackgroundImageUrl() ?? string.Empty;
                     var videoPageUrl = itemNode.SelectSingleNode(".//a[@class='link white']")?.HrefAttribute() ?? string.Empty;
 
-                    var videoId = WebClientService.ExtractIdFromUrl(videoPageUrl);
+                    var videoId = UrlExtensions.ExtractIdFromUrl(videoPageUrl);
                     result.Add(new ShowVideoItem
                     {
                         Id = videoId,
